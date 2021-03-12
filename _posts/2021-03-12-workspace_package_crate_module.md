@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  "workspace, package, crate, module in rust"
 categories: 
   - Rust

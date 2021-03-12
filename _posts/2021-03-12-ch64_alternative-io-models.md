@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  "ch64: alternative io models"
 categories: 
   - Linux
