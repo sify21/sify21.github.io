@@ -1,3 +1,8 @@
+---
+title:  "how to get rid of acne by chatgpt"
+categories: 
+  - Everyday Life
+---
 Acne can be a frustrating skin condition, but there are several steps you can take to help reduce its appearance:
 
 1. Keep your skin clean: Wash your face twice a day with a gentle, non-drying cleanser.
