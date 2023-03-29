@@ -19,7 +19,7 @@ package的名称也不一定跟文件夹保持一致，`import`语句使用的�
   - xxx
     - a.go (可以是package main，而且可以`import github.com/sify21/xx/packageA`，使用时需要`xa.functionName`)
 
-go1.18新增了workspace, 这个是处理同时在多个module上工作的情况。go.work里的replace语句可以解决多个module的go.mod replace同一个module是冲突的情况，比如这几个module引用依赖module时用的是相对路径，可能相对的路径都不一致，这时就可以在go.work中解决这个冲突。
+go1.18新增了workspace, 这个是处理同时在多个module上工作的情况。go.work里的replace语句可以解决多个module的go.mod replace同一个依赖module时冲突的情况，比如这几个module引用依赖module时用的是相对路径，可能相对的路径都不一致，这时就可以在go.work中解决这个冲突。
 
 ## Rust代码结构: workspace, package, crate, mod(ule)
 
