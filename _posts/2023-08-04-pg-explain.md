@@ -69,7 +69,83 @@ sequencial scan，full scan，电子书中的long query
 >   - get next row from left side (if there are no more rows, finish processing)
 >   - go to step 1
 
+### Hash Join / Nested Loop / Merge Join modifiers
+> We can have LEFT/RIGHT/FULL outer joins. And there are so called anti-joins.
+> In case of left/right joins, the operation names get changed to:
+> - Hash Left Join
+> - Hash Right Join
+> - Merge Left Join
+> - Merge Right Join
+> - Nested Loop Left Join
+> There is no Nested Loop Right Join, because Nested Loop always starts with left side as basis to looping. So join that uses RIGHT JOIN, that would use Nested Loop, will get internally transformed to LEFT JOIN so that Nested Loop can work.
+>
+> In all those cases the logic is simple – we have two sides of join – left and right. And when side is mentioned in join, then join will return new row even if the other side doesn't have matching rows.
+> 
+> There is also a version called Full Join, with operation names:
+> - Hash Full Join
+> - Merge Full Join
+> In which case join generates new output row regardless of whether data on either side is missing (as long as the data is there for one side)
+>
+> There are also so called Anti Joins. Their operation names look like:
+> - Hash Anti Join
+> - Merge Anti Join
+> - Nested Loop Anti Join
+> In these cases Join emits row only if the right side doesn't find any row. This is useful when you're doing things like “WHERE not exists ()" or “left join … where right_table.column is null".
+
+### Materialize
+> Materialize gets data from underlying operation and stores it in memory (or partially in memory) so that it can be used faster, or with additional features that underlying operation doesn't provide.
+比如Nested Loop的right part，materialize后第2个op就只需要执行一次了，后续的loop直接读内存。
+
+### Unique
+removes duplicate data（distinct），But in newer Pgs this query will usually be done using HashAggregate
+这个操作需要数据是有序的
+> This makes it really cool (when possible to use) because it doesn't use virtually any memory. It just checks if value in previous row is the same as in current, and if yes – discards it. That's all.
+> 
+> So, we can force usage of it, by pre-sorting data:
+
+### Append
+对应union / union all 
+> UNION removes duplicate rows – which is, in this case, done using HashAggregate operation.
+> 
+> HashAggregate  
+>   -> Append (.....)
+
+### Result
+> This operation is used when your query selects some constant value (or values)
+
+### Values Scan
+> returning simple, entered in query, data, but this time – it can be whole recordset, based on VALUES() functionality
+>
+> SELECT * FROM ( VALUES (1, 'hubert'), (2, 'depesz'), (3, 'lubaczewski') ) AS t (a,b);
+
+### GroupAggregate
+> This is similar to previously described HashAggregate.
+>
+> The difference is that for GroupAggregate to work data has to be sorted using whatever column(s) you used for your GROUP BY clause.
+> 
+> Just like Unique – GroupAggregate uses very little memory, but forces ordering of data.
+
+### HashSetOp
+> This operation is used by INTERSECT/EXCEPT operations (with optional “ALL" modifier).
+>
+>It works by running sub-operation of Append for a pair of sub-queries, and then, based on result and optional ALL modifier, it figures which rows should be returned. I haven't digged in the source code so I can't tell you exactly how it works, but given the name and the operation, it looks like a simple counter-based solution.
+
+### CTE Scan
+> This is similar to previously mentioned Materialized operation. It runs a part of a query, and stores output so that it can be used by other part (or parts) of the query.
+> The very important thing is that CTEs are ran just as specified. So they can be used to circumvent some not-so-good optimizations that planner normally can do.
+ 
+### InitPlan
+> This plan happens whenever there is a part of your query that can (or have to) be calculated before anything else, and it doesn't depend on anything in the rest of your query.
+>
+> Pg correctly sees that the subselect column does not depend on any data from pg_class table, so it can be run just once, and doesn't have to redo the length-calculation for every row.
+>
+> There is one important thing, though – numbering of init plans within single query is “global", and not “per operation".
+
+### SubPlan
+> SubPlans are a bit similar to NestedLoop. In this way that these can be called many times.
+>
+> SubPlan is called to calculate data from a subquery, that actually does depends on current row.
 
 ## 参考
-- [Explaining the unexplainable](https://www.depesz.com/2013/04/16/explaining-the-unexplainable/) 系列
+- [Explaining the unexplainable](https://www.depesz.com/tag/unexplainable/) 系列
 - 电子书 [PostgreSQL Query Optimization](https://www.amazon.com/PostgreSQL-Query-Optimization-Ultimate-Efficient/dp/1484268849)
