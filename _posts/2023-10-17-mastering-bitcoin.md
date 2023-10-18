@@ -19,3 +19,23 @@ K=kG
 ```
 A=RIPEMD160(SHA256(K)), or A=HASH160(K)
 ```
+```
+checksum = first 4 bytes of: SHA256(SHA256(prefix + data))
+Base58Check-encoded Payload = Base58(prefix + data + checksum)
+```
+Base58Check version prefix and encoded result examples
+
+|Type| Version prefix (hex)| Base58 result prefix|
+|---|---|---|
+| Bitcoin Address | 0x00 | 1|
+| Pay-to-Script-Hash Address | 0x05 | 3|
+| Bitcoin Testnet Address | 0x6F | m or n|
+| Private Key WIF |  0x80 | 5, K, or L|
+| BIP-38 Encrypted Private Key | 0x0142 | 6P|
+| BIP-32 Extended Public Key | 0x0488B21E | xpub|
+
+```
+uncompressed public key = 04 x y
+compressed public key = 02 x(y is even) or 03 x(y is odd)
+compressed private key (for wallet import format) = uncompressed private key 01
+```
