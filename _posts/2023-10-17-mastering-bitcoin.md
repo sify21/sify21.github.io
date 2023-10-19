@@ -14,7 +14,8 @@ its parent rawtx
 ```
 # ch04
 ```
-K=kG
+K=kG, 0<k<=n-1
+n(1.1578 * 1077) is slightly less than 2^256(order of elliptic curve)
 ```
 ```
 A=RIPEMD160(SHA256(K)), or A=HASH160(K)
@@ -39,3 +40,9 @@ uncompressed public key = 04 x y
 compressed public key = 02 x(y is even) or 03 x(y is odd)
 compressed private key (for wallet import format) = uncompressed private key 01
 ```
+# ch05
+mnemonic -> seed -> hierarchical deterministic
+- Mnemonic code words, based on BIP-39
+- HD wallets, based on BIP-32
+- Multipurpose HD wallet structure, based on BIP-43
+- Multicurrency and multiaccount wallets, based on BIP-44
