@@ -42,13 +42,13 @@ compressed private key (for wallet import format) = uncompressed private key 01
 ```
 # ch05
 `mnemonic(128-256 bits)` -> (optinaly with salt) key-stretching function PBKDF2(2048 rounds of HMAC-SHA512) -> `seed(512-bit)` -> HMAC-SHA512 -> `master pri key(left 256 bits) + master chain code(right 256 bits)`
-- Mnemonic code words, based on BIP-39
-- HD(hierarchical deterministic) wallets, based on BIP-32
-- Multipurpose HD wallet structure, based on BIP-43
-- Multicurrency and multiaccount wallets, based on BIP-44: `m / purpose'(always 44’) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
+- Mnemonic code words, based on [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
+- HD(hierarchical deterministic) wallets, based on [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
+- Multipurpose HD wallet structure, based on [BIP-43](https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki)
+- Multicurrency and multiaccount wallets, based on [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki): `m / purpose'(always 44’) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
 
 # ch07
-## p2sh(BIP-16)
+## p2sh([BIP-16](https://github.com/bitcoin/bips/blob/master/bip-0016.mediawiki))
 - execute scriptSig
 - the stack gets copied (contains \<redeem script\>, which is the original scripPub of p2pbk or p2ms)
 - execute scriptPub
@@ -56,8 +56,8 @@ compressed private key (for wallet import format) = uncompressed private key 01
 
 2-of-3 multisig script using p2sh adds an extra 25 bytes to the overall script, compared to 2-of-3 multisig script using the simple P2MS pattern.
 ## segwit
-- BIP-141: The main definition of Segregated Witness.
-- BIP-143: Transaction Signature Verification for Version 0 Witness Program
-- BIP-144: Peer Services—New network messages and serialization formats
-- BIP-145: getblocktemplate Updates for Segregated Witness (for mining)
-- BIP-173: Base32 address format for native v0-16 witness outputs
+- [BIP-141](https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki) The main definition of Segregated Witness.
+- [BIP-143](https://github.com/bitcoin/bips/blob/master/bip-0143.mediawiki) Transaction Signature Verification for Version 0 Witness Program
+- [BIP-144](https://github.com/bitcoin/bips/blob/master/bip-0144.mediawiki) Peer Services—New network messages and serialization formats
+- [BIP-145](https://github.com/bitcoin/bips/blob/master/bip-0145.mediawiki) getblocktemplate Updates for Segregated Witness (for mining)
+- [BIP-173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki) Base32 address format for native v0-16 witness outputs
