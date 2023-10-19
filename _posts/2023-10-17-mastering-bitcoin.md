@@ -61,3 +61,15 @@ compressed private key (for wallet import format) = uncompressed private key 01
 - [BIP-144](https://github.com/bitcoin/bips/blob/master/bip-0144.mediawiki) Peer Services—New network messages and serialization formats
 - [BIP-145](https://github.com/bitcoin/bips/blob/master/bip-0145.mediawiki) getblocktemplate Updates for Segregated Witness (for mining)
 - [BIP-173](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki) Base32 address format for native v0-16 witness outputs
+
+A scriptPubKey (or redeemScript as defined in BIP16/P2SH) that consists of a 1-byte push opcode (for 0 to 16) followed by a data push between 2 and 40 bytes gets a new special meaning, which is interpreted as  "version byte" + "witness program".
+
+two cases in which witness validation logic are triggered:
+- native witness program: above pattern is in scriptPubKey (scriptSig must be empty or validaition fails)
+- P2SH witness program: above pattern is in redeemScript (scriptSig must be exactly a push of the BIP16 redeemScript or validation fails)
+
+`version byte` = `0` && `witness program` = `20 bytes`: interpreted as P2WPKH program, the witness must consist of exactly 2 items (≤ 520 bytes each). The first one a signature, and the second one a public key.
+
+`version byte` = `0` && `witness program` = `32 bytes`: interpreted as P2WSH program, The witness must consist of an input stack to feed to the script, followed by a serialized script(witness script, ≤ 10,000 bytes).
+
+
