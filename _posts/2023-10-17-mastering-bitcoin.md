@@ -41,8 +41,8 @@ compressed public key = 02 x(y is even) or 03 x(y is odd)
 compressed private key (for wallet import format) = uncompressed private key 01
 ```
 # ch05
-mnemonic -> seed -> hierarchical deterministic
+`mnemonic(128-256 bits)` -> (optinaly with salt) key-stretching function PBKDF2(2048 rounds of HMAC-SHA512) -> `seed(512-bit)` -> HMAC-SHA512 -> `master pri key(left 256 bits) + master chain code(right 256 bits)`
 - Mnemonic code words, based on BIP-39
-- HD wallets, based on BIP-32
+- HD(hierarchical deterministic) wallets, based on BIP-32
 - Multipurpose HD wallet structure, based on BIP-43
-- Multicurrency and multiaccount wallets, based on BIP-44
+- Multicurrency and multiaccount wallets, based on BIP-44: `m / purpose'(always 44) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
