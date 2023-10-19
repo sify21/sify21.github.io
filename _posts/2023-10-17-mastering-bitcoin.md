@@ -45,4 +45,4 @@ compressed private key (for wallet import format) = uncompressed private key 01
 - Mnemonic code words, based on BIP-39
 - HD(hierarchical deterministic) wallets, based on BIP-32
 - Multipurpose HD wallet structure, based on BIP-43
-- Multicurrency and multiaccount wallets, based on BIP-44: `m / purpose'(always 44) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
+- Multicurrency and multiaccount wallets, based on BIP-44: `m / purpose'(always 44&#x27;) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
