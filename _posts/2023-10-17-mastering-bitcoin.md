@@ -46,3 +46,18 @@ compressed private key (for wallet import format) = uncompressed private key 01
 - HD(hierarchical deterministic) wallets, based on BIP-32
 - Multipurpose HD wallet structure, based on BIP-43
 - Multicurrency and multiaccount wallets, based on BIP-44: `m / purpose'(always 44’) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
+
+# ch07
+## p2sh(BIP-16)
+- execute scriptSig
+- the stack gets copied (contains \<redeem script\>, which is the original scripPub of p2pbk or p2ms)
+- execute scriptPub
+- pop and deserialize \<redeem script\> from the copied stack, which becomes the new locking script
+
+2-of-3 multisig script using p2sh adds an extra 25 bytes to the overall script, compared to 2-of-3 multisig script using the simple P2MS pattern.
+## segwit
+- BIP-141: The main definition of Segregated Witness.
+- BIP-143: Transaction Signature Verification for Version 0 Witness Program
+- BIP-144: Peer Services—New network messages and serialization formats
+- BIP-145: getblocktemplate Updates for Segregated Witness (for mining)
+- BIP-173: Base32 address format for native v0-16 witness outputs
