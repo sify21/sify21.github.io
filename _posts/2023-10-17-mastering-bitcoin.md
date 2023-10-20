@@ -89,4 +89,17 @@ two cases in which witness validation logic are triggered:
 - Tor
 - P2P层面 : Peer Authentication(BIP-150), Peer-to-Peer Communication Encryption(BIP-151）
 
+# ch09
+## Block Header(40 bytes)
+|Size| Field | Description |
+| -- | -- | -- |
+| 4 bytes | Version | A version number to track software/protocol upgrades |
+| 32 bytes | Previous Block Hash | A reference to the hash of the previous (parent) block in the chain |
+| 32 bytes | Merkle Root | A hash of the root of the merkle tree of this block's transactions |
+| 4 bytes | Timestamp | The approximate creation time of this block (in seconds elapsed since Unix Epoch) |
+| 4 bytes | Difficulty Target | The Proof-of-Work algorithm difficulty target for this block |
+| 4 bytes | Nonce | A counter used for the Proof-of-Work algorithm |
 
+`authentication path`, or `merkle path`: nodes in the merkle tree to make hash with, bottom-up.
+
+The merkleblock message contains the block header as well as a merkle path that links the transaction of interest to the merkle root in the block
