@@ -72,4 +72,21 @@ two cases in which witness validation logic are triggered:
 
 `version byte` = `0` && `witness program` = `32 bytes`: interpreted as P2WSH program, The witness must consist of an input stack to feed to the script, followed by a serialized script(witness script, ≤ 10,000 bytes).
 
+# ch08
+- P2P network
+- FIBRE(fast internet bitcoin relay engine) 挖矿用
+## full node
+
+## SPV node
+只存储Block头。SPV verifies transactions by reference to their depth in the blockchain instead of their height。节点等待6个新block堆叠在包含tx的block上，以此证明tx被认证了。
+
+消息(会过滤peer连接中的block和tx消息)：
+- getheaders(headers,包含2000个)
+- getdata(merkleblock,tx)
+- filterload, filteradd, filterclear([BIP-37](https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki) 请求特定tx会暴露钱包管理的地址，所以引入Bloom Filters提高私密性)
+
+通过消息加密来提升SPV节点的隐私性
+- Tor
+- P2P层面 : Peer Authentication(BIP-150), Peer-to-Peer Communication Encryption(BIP-151）
+
 
