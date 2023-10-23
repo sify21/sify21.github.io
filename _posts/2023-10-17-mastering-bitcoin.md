@@ -118,22 +118,27 @@ various mechanisms that can be used to invalidate prior state :
 - Asymmetric revocable commitments with relative time locks (CSV CheckSequenceVerify)
 
     `time delay` + `revocation key` as a punishment/disadvantage/penalty
+
+    我构造的（让对方签的）tx包含如下输出
     ```
     Output 0 <5 bitcoin>:
-        <Irene's Public Key> CHECKSIG
+        <对方的 Public Key> CHECKSIG
 
     Output 1 <5 bitcoin>:
-    IF
-        # Revocation penalty output
-        <Revocation Public Key>
-    ELSE
-        <1000 blocks>
-        CHECKSEQUENCEVERIFY
-        DROP
-        <Hitesh's Public Key>
-    ENDIF
-    CHECKSIG
+        IF
+            # Revocation penalty output
+            <Revocation Public Key>
+        ELSE
+            <1000 blocks>
+            CHECKSEQUENCEVERIFY
+            DROP
+            <我的 Public Key>
+        ENDIF
+        CHECKSIG
     ```
+    进入下一个state，我要revoke我自己的tx，做法是：把我的half of the revoke secret发送给对方。
+  
+    在每个阶段，对方也持有类似的一个tx。
 
 ## routed payment channels (lightning network)
 HTLC (hash time lock contract)
