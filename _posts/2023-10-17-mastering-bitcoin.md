@@ -103,3 +103,21 @@ two cases in which witness validation logic are triggered:
 `authentication path`, or `merkle path`: nodes in the merkle tree to make hash with, bottom-up.
 
 The merkleblock message contains the block header as well as a merkle path that links the transaction of interest to the merkle root in the block
+
+# ch12
+## payment channel / state channel
+funding transaction / anchor transaction (on-chain) ----> commitment transactions (off-chain, each state invalidates previous state) ----> settlement transaction (on-chain)
+
+various mechanisms that can be used to invalidate prior state :
+- transaction-level timelocks (nLocktime)
+
+    The refund transaction acts as the first commitment transaction and its timelock establishes the upper bound for the channel’s life.
+
+    Each commitment sets a shorter timelock, allowing it to be spent before the previous commitments become valid
+
+- Asymmetric revocable commitments with relative time locks (CSV CheckSequenceVerify)
+
+## routed payment channels (lightning network)
+HTLC (hash time lock contract)
+- hash: redeem immediately
+- time lock: refund after timeout(if the secret is not revealed)
