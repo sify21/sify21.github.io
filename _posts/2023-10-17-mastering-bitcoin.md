@@ -144,3 +144,6 @@ various mechanisms that can be used to invalidate prior state :
 HTLC (hash time lock contract)
 - hash: redeem immediately
 - time lock: refund after timeout(if the secret is not revealed)
+
+*疑问1* 在channel末端，返回private key后，为什么channel中的每个节点必须把key传给上家？当前节点有了key就可以直接得到钱了啊
+
