@@ -3,7 +3,7 @@ title:  "mastering bitcoin - 笔记"
 categories: 
   - bitcoin
 ---
-# ch02
+# ch02 How Bitcoin Works
 Alice to Bob's rawtx(P2PKH)
 ```
 0100000001186f9f998a5aa6f048e51dd8419a14d8a0f1a8a2836dd734d2804fe65fa35779000000008b483045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e381301410484ecc0d46f1918b30928fa0e4ed99f16a0fb4fde0735e7ade8416ab9fe423cc5412336376789d172787ec3457eee41c04f4938de5cc17b4a10fa336a8d752adfffffffff0260e31600000000001976a914ab68025513c3dbd2f7b92a94e0581f5d50f654e788acd0ef8000000000001976a9147f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a888ac00000000
@@ -12,7 +12,7 @@ its parent rawtx
 ```
 0100000001524d288f25cada331c298e21995ad070e1d1a0793e818f2f7cfb5f6122ef3e71000000008c493046022100a59e516883459706ac2e6ed6a97ef9788942d3c96a0108f2699fa48d9a5725d1022100f9bb4434943e87901c0c96b5f3af4e7ba7b83e12c69b1edbfe6965f933fcd17d014104e5a0b4de6c09bd9d3f730ce56ff42657da3a7ec4798c0ace2459fb007236bc3249f70170509ed663da0300023a5de700998bfec49d4da4c66288a58374626c8dffffffff0180969800000000001976a9147f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a888ac00000000
 ```
-# ch04
+# ch04 Keys, Addresses
 ```
 K=kG, 0<k<=n-1
 n(1.1578 * 1077) is slightly less than 2^256(order of elliptic curve)
@@ -40,14 +40,14 @@ uncompressed public key = 04 x y
 compressed public key = 02 x(y is even) or 03 x(y is odd)
 compressed private key (for wallet import format) = uncompressed private key 01
 ```
-# ch05
+# ch05 Wallets
 `mnemonic(128-256 bits)` -> (optinaly with salt) key-stretching function PBKDF2(2048 rounds of HMAC-SHA512) -> `seed(512-bit)` -> HMAC-SHA512 -> `master pri key(left 256 bits) + master chain code(right 256 bits)`
 - Mnemonic code words, based on [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
 - HD(hierarchical deterministic) wallets, based on [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 - Multipurpose HD wallet structure, based on [BIP-43](https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki)
 - Multicurrency and multiaccount wallets, based on [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki): `m / purpose'(always 44’) / coin_type' / account' / change(0 for receiving address or signing prikey, 1 for change address) / address_index (usable addresses)`
 
-# ch07
+# ch07 Advanced Transactions and Scripting
 ## p2sh([BIP-16](https://github.com/bitcoin/bips/blob/master/bip-0016.mediawiki))
 - execute scriptSig
 - the stack gets copied (contains \<redeem script\>, which is the original scripPub of p2pbk or p2ms)
@@ -72,7 +72,7 @@ two cases in which witness validation logic are triggered:
 
 `version byte` = `0` && `witness program` = `32 bytes`: interpreted as P2WSH program, The witness must consist of an input stack to feed to the script, followed by a serialized script(witness script, ≤ 10,000 bytes).
 
-# ch08
+# ch08 The Bitcoin Network
 - P2P network
 - FIBRE(fast internet bitcoin relay engine) 挖矿用
 ## full node
@@ -89,7 +89,14 @@ two cases in which witness validation logic are triggered:
 - Tor
 - P2P层面 : Peer Authentication(BIP-150), Peer-to-Peer Communication Encryption(BIP-151）
 
-# ch09
+# ch09 The Blockchain
+## Block
+|Size| Field | Description |
+| -- | -- | -- |
+| 4 bytes | Block Size | The size of the block, in bytes, following this field |
+| 80 bytes | Block Header | Several fields form the block header |
+| 1&#x2013;9 bytes (VarInt) | Transaction Counter | How many transactions follow |
+| Variable | Transactions | The transactions recorded in this block |
 ## Block Header(40 bytes)
 |Size| Field | Description |
 | -- | -- | -- |
@@ -104,7 +111,7 @@ two cases in which witness validation logic are triggered:
 
 The merkleblock message contains the block header as well as a merkle path that links the transaction of interest to the merkle root in the block
 
-# ch12
+# ch12 Blockchain Applications
 ## payment channel / state channel
 funding transaction / anchor transaction (on-chain) ----> commitment transactions (off-chain, each state invalidates previous state) ----> settlement transaction (on-chain)
 
