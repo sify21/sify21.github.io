@@ -57,3 +57,12 @@ categories:
 # Blockchain and Mining
 >  Ethereum blocks contain a copy of both the transaction list and the most recent state (In Ethereum, the state is made up of objects called "accounts")
 - [Merkle Patricia Trie](https://ethereum.org/en/developers/docs/data-structures-and-encoding/patricia-merkle-trie/)
+
+# Concerns（没读懂）
+- Modified GHOST
+
+  [Secure High-Rate Transaction Processing in Bitcoin](https://eprint.iacr.org/2013/881.pdf)
+
+- Fees
+
+  Bitcoin: "market-based", in reality it's not, because every transaction that a miner includes will need to be processed by every node, thus `tragedy-of-the-commons`
