@@ -72,7 +72,7 @@ $H_n$ | nonce
 
 symbol | meaning
 --- | ---
-$B_R$ | transaction receipt trie, $B_R[i]$ for the $i$ th transaction
+$B_R$ | transaction receipt trie of the block, $B_R[i]$ for the $i$ th transaction
 R | transaction receipt
 $R_x$ | type of the transaction
 $R_z$ | status code of the transaction
