@@ -13,6 +13,12 @@ $\sigma [a]_b$ | balance(Wei)
 $\sigma [a]_s$ | storageRoot
 $\sigma [a]_c$ | codeHash
 
+$$\forall a : \sigma [a] = \varnothing \vee (a \in \mathbb{B}_{20} \wedge v(\sigma[a]))$$
+
+$$\mathbb{B}_{256} \mathbb{B}_{256}$$
+
+$$v(x) \equiv x_n \in \mathbb{N}_{256} \wedge x_b \in \mathbb{N}_{256} \wedge x_s \in \mathbb{B}_{32} \wedge x_c \in \mathbb{B}_{32}$$
+
 ## transaction state
 symbol | meaning
 --- | ---
