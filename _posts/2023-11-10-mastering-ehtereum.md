@@ -132,7 +132,7 @@ Contracts don’t run on their own. Ethereum doesn’t run autonomously. Everyth
   - m RLP-encoded transaction(nonce, gasPrice, gasLimit, to, value, data, chainID, 0, 0)
   - $Sig = (r,s)$
     
-  $r$ is $x$ coordinate of ephemeral public key $Q$ from ephemeral private key $q$, $s \equiv q^(-1)(Keccak256(m)+r*k) (\mod p)$
+  $r$ is $x$ coordinate of ephemeral public key $Q$ from ephemeral private key $q$, $s \equiv q^{-1}(Keccak256(m)+r*k) (\mod p)$
 
   $v$ indicates the chain ID and the recovery identifier (Public Key Recovery involves $r$, $s$ and message hash)
 
