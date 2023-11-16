@@ -137,3 +137,113 @@ Contracts don’t run on their own. Ethereum doesn’t run autonomously. Everyth
   $v$ indicates the chain ID and the recovery identifier (Public Key Recovery involves $r$, $s$ and message hash)
 
 transaction serialized using RLP (Recursive Length Prefix), big-endian integers, no field delimiters or labels. EOA's public key is derived from $v,r,s$
+
+## ch07 smart contract and solidity
+- by Nick Szabo
+- misnomer in Ethereum, neither smart nor legal contracts
+- computer programs
+- immutable (the code cannot change)
+- deterministic
+- EVM context
+- world computer
+- selfdestruct/suicide negative gas
+### contract ABI(application binary interface)
+- ABI defines how data structures and functions are accessed in machine code, thus primary way of encoding and decoding data into and out of machine code
+- API(application programming interface) define this access in high level, often human-readable formats as source code
+- in Ethereum, define functions in contract that can be invoked and describe function arguments and result
+- specified as JSON array of function descriptions and events (solc --abi)
+
+## ch08 vyper
+- no function modifiers
+- no inheritance
+- no inline assembly
+- no function overloading
+- no implicit typecasting: use `convert` to perform explicit casts (raise exception when information lost;)
+- deterministic number of iterations with `for`; no recursive calling
+- preconditionsn and postconditions
+  - condition
+  - effects
+  - interactions
+- decorators
+- one vyper file for one contract; function and variable declarations physically written in particular order
+- overflow issue
+  - solidity
+    - SafeMath library
+    - Mythril OSS security analysis tool
+  - vyper
+    - SafeMath equivalent
+    - clamps
+
+## ch09 smart contract security
+- defensive programming
+  - minimalism/simplicity
+  - code reuse
+  - code quality: unforgiving discipline
+  - readability/auditability
+  - test coverage
+
+- security risks / antipatterns
+  - reentrancy
+    - use `transfer`
+    - `checks-effects-interacctions` pattern
+    - mutex
+  - arithmetic over/underflows
+    - SafeMath library by OpenZeppelin
+  - unexpected ether
+
+    ether added to contract without executing any code; or `this.balance` artificially manipulated
+    - sendall/selfdestruct/suicide
+    - pre-sent ether
+
+      `contract_address = keccak256(rlp.encode([account_address,transaction_nonce]))`
+  - delegatecall
+    - context-reserving: state variables are referenced by slot index
+    - library should be stateless
+  - default visibilities
+    - solidity: default is public
+    - always specify visibility
+  - entropy illusion
+    - source of entropy must be external to the blockchain
+      - commit-reveal(done among peers)
+      - RandDAO
+      - randomness oracle
+  - external contract referencing
+    
+    author/owner/deployer of the contract(the attacker) wants to hide malicious code (from auditor)
+    - `new` to create contracts
+    - hardcode external contract addresses
+    - external contral addresses should be public to allow users examnie referenced code
+    - if external contract address can be changed, it should implement a time-lock/voting mechanism for auditing
+  - short address/parameter attack
+
+    performed on third-party applications that interact with contracts
+    - EVM will add zeros to the end of the encoded parameters if they are shorter than the expected parameter length
+    - input parameters in external applications should be validated
+    - careful ordering of contract parameters can mitigate: padding(added zeros) only occurs at the end
+  - unchecked call return values
+    - `call`/`send` return `Boolean`, rather than revert
+    - should use `transfer`(which reverts) to send ether
+    - [_withdrawal_ pattern](https://docs.soliditylang.org/en/latest/common-patterns.html#withdrawal-from-contracts): isolated withdraw function
+  - race conditions/front-running
+    - attacker watch transaction pool, raise gasPrice
+    - miners reorder transactions at their will
+    - solution1: upper bound on gasPrice
+    - solution2: commit-reveal scheme
+    - solution3: submarine sends
+  - dos
+    - loop through externally manipulated mappings/arrays (exceeds block gas limit)
+      - should use withdrawal pattern
+    - owner privileged operations needed for the contract to proceed to the next state
+      - can use multisig
+      - can use time-lock
+    - progressing state based on external calls
+      - should add a time-based state progression
+    - can add a `maintenanceUser` (centralized, trust-issue)
+  - block timestamp manipulation
+    - use block number instead
+  - constructor name (before solidity v0.4.22)
+  - uninitialized storage pointers
+    - solidity by default puts local variables of  complex data types(e.g. structs) in storage
+  - floating point and precision
+  - tx.origin authentication
+    - can only be used when: deny external contracts from calling current contract `require(tx.origin == msg.sender)`
