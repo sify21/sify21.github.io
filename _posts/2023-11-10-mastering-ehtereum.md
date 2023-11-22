@@ -146,7 +146,7 @@ transaction serialized using RLP (Recursive Length Prefix), big-endian integers,
 - deterministic
 - EVM context
 - world computer
-- selfdestruct/suicide negative gas
+- selfdestruct/suicide negative gas (the refund is removed since EIP-3529)
 ### contract ABI(application binary interface)
 - ABI defines how data structures and functions are accessed in machine code, thus primary way of encoding and decoding data into and out of machine code
 - API(application programming interface) define this access in high level, often human-readable formats as source code
@@ -247,3 +247,78 @@ transaction serialized using RLP (Recursive Length Prefix), big-endian integers,
   - floating point and precision
   - tx.origin authentication
     - can only be used when: deny external contracts from calling current contract `require(tx.origin == msg.sender)`
+
+## ch10 token
+- fungibility
+- counterparty risk
+  - custodian of the asset
+- intrinsicality
+  - equity in a extinsic corporatio vs DAO(intrinsic)
+- utility & equity
+- The ether balance of Ethereum accounts is handled at the protocol level, whereas the token balance of Ethereum accounts is handled at the smart contract level
+- ERC20
+  - fungible
+  - cant pay for gas (need ether to send tokens)
+  - locked into contracts problem: tokens transfered to contract that dont support tokens are lost forever
+- ERC223
+  - solve the problem of inadvertent transfer of tokens to a contract
+  - `isContract`: extcodesize
+  - `tokenFallback` to accept tokens
+  - not widely implemented
+- ERC777
+  - depends on ERC820: registry contract
+- ERC721
+  - non-fungible tokens (deeds)
+  - 256-bit identifier (deedId)
+## ch11 oracles
+- system that can answer questions that are external to Ethereum
+- to maintain consensus, EVM execution must be totally deterministic
+  - no intrinsic source of randomness
+  - extrinsic data can only be introduced as transaction data payload
+- ability
+  - Collect data from an off-chain source
+  - Transfer the data on-chain with a signed message
+  - Make the data available by putting it in a smart contract’s storage
+- patterns
+  - request-response
+  - publish-subscribe
+  - immediate-read
+## ch12 dapps
+- aspects of an application that may be decentralized
+  - Backend software (application logic)
+  - Frontend software
+  - Data storage
+  - Message communications
+  - Name resolution
+- dapp advantages
+  - resiliency
+  - transparency
+  - censorship resistance
+## ch13 EVM
+- stack-based: all in-memory values stored on a stack
+- 256-bit word size: to facilitate native hashing and elliptic curve operations
+- addressable data components
+  - immutable program code ROM (contract code)
+  - volatile memory
+  - permanent storage
+## ch14 consensus
+- synchronizing state in distributed system
+- no trusted arbitrator
+- consensus algorithm: the mechanism to reconcile security and decentralization
+- consensus is intended to produce a system of strict rules without rulers
+- consensus models
+  - PoW
+    - mining
+      - reward is the means
+      - decentralized security is the end
+    - Ethhash
+      - dependent on the generation and analysis of DAG (directed acyclic graph)
+      - ASIC resistant: more difficult to make ASIC, to avoid centralization in PoW mining (use GPU)
+  - PoS
+    - blockchain keeps track of validators
+    - anyone who holds the blockchain’s base cryptocurrency can become a validator by sending a special type of transaction that locks up their ether into a deposit
+    - validators take turns proposing and voting on the next valid block, and the weight of each validator’s vote depends on the size of its deposit (i.e. stake)
+    - a validator risks losing their deposit, i.e., "being slashed", if the block they staked it on is rejected by the majority of validators
+    - validators earn a small reward, proportional to their deposited stake, for every block that is accepted by the majority
+    - The major difference between PoS and PoW is that the punishment in PoS is intrinsic to the blockchain (e.g., loss of staked ether), whereas in PoW the punishment is extrinsic (e.g., loss of funds spent on electricity)
+    - Casper
