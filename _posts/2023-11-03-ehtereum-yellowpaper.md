@@ -6,6 +6,7 @@ categories:
 ---
 
 ## World State
+
 symbol | meaning
 --- | ---
 $\sigma$ | world state
@@ -17,9 +18,7 @@ $\sigma [a]_c$ | codeHash
 
 $$\forall a : \sigma [a] = \varnothing \vee (a \in \mathbb{B}_{20} \wedge v(\sigma[a]))$$
 
-```math
-v(x) \equiv x_n \in \mathbb{N}_{256} \wedge x_b \in \mathbb{N}_{256} \wedge x_s \in \mathbb{B}_{32} \wedge x_c \in \mathbb{B}_{32}
-```
+$$v(x) \equiv x_n \in \mathbb{N}_{256} \wedge x_b \in \mathbb{N}_{256} \wedge x_s \in \mathbb{B}_{32} \wedge x_c \in \mathbb{B}_{32}$$
 
 $$EMPTY(\sigma, a) \equiv \sigma[a]_c=KEC\big(()\big) \wedge \sigma[a]_n=0 \wedge \sigma[a]_b=0$$
 
@@ -27,6 +26,7 @@ $$DEAD(\sigma, a) \equiv \sigma[a]=\varnothing \vee EMPTY(\sigma, a)$$
 
 
 ## Transaction
+
 symbol | meaning
 --- | ---
 $T_x$ | type
@@ -43,6 +43,7 @@ $T_i$ ($T_t=\varnothing$)| init (contract creation)
 $T_d$ ($T_t\ne\varnothing$)| data (message call)
 
 ## Block
+
 symbol | meaning
 --- | ---
 B | block
