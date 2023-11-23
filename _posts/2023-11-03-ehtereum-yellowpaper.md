@@ -1,8 +1,10 @@
 ---
+mathjax: true
 title:  "ethereum yellowpaper - 笔记"
 categories: 
   - ethereum
 ---
+
 ## World State
 symbol | meaning
 --- | ---
