@@ -42,6 +42,10 @@ compressed private key (for wallet import format) = uncompressed private key 01
 ```
 # ch05 Wallets
 `mnemonic(128-256 bits)` -> (optinaly with salt) key-stretching function PBKDF2(2048 rounds of HMAC-SHA512) -> `seed(512-bit)` -> HMAC-SHA512 -> `master pri key(left 256 bits) + master chain code(right 256 bits)`
+
+CKD function visualized. from [a nice blog](https://medium.com/@blainemalone01/hd-wallets-why-hardened-derivation-matters-89efcdc71671) of @blainemalone01 on medium.
+![child key derivation function](/assests/images/bip32.webp)
+
 - Mnemonic code words, based on [BIP-39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki)
 - HD(hierarchical deterministic) wallets, based on [BIP-32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 - Multipurpose HD wallet structure, based on [BIP-43](https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki)
