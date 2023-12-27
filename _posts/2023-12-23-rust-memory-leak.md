@@ -30,6 +30,8 @@ profiling = ["tikv-jemallocator/profiling"] # 或者可以不加这个，在构�
 
 rust目前还没有target specific feature，但既然dependency已经是target specific的了，所以如果没有这个dependency开这个feature也没啥影响。
 
+注意在rust项目构建完成后，会在对应target目录的build/tikv-jemalloc-sys-??/out/build/bin目录下包含对应jeprof脚本程序。最好用这个脚本。自己从jemalloc源码构建的可能跟rust构建用的版本不一样。
+
 ### jemalloc配置
 jemalloc配置文档：http://jemalloc.net/jemalloc.3.html
 > ### TUNING
