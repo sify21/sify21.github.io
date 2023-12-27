@@ -83,7 +83,62 @@ The following matches the above heap profile, but most tokens are replaced with 
 MAPPED_LIBRARIES:
 </proc/<pid>/maps>
 ```
+objects可能是指calloc: Allocates memory for an array of **num** objects of **size** and initializes all bytes in the allocated storage to zero. 最终分配的bytes= **num** * **size**
+
+对应的malloc可能就看成了object count为1。
+
 文件最后的MAPPED_LIBRARIES包含可执行文件的绝对路径。所以jeprof工具应当在生成dump文件的机器上本地跑。如果把dump文件拿到本地来分析，需要手动需改下文件路径到本地的可执行文件路径。
+
+Jason Evans本人对数据的解释（http://jemalloc.net/mailman/jemalloc-discuss/2015-November/001205.html）
+> The two types of stats are:
+> - Current bytes/objects, aka "inuse" in pprof/jeprof terminology.  These are counts of how many sampled objects currently exist.  Use these stats to understand current memory usage.
+> - Cumulative bytes/objects, aka "alloc" in pprof/jeprof terminology.  These are counts of how many sampled bytes/objects have existed since the most recent stats reset (process start or "prof.reset" mallctl call).  Use these stats to understand total allocation volume.
+> 
+> dumps are always based on the most recent stats reset (process start or "prof.reset" mallctl call).  You can view incremental differences between two dumps by using the --base option to jeprof
+>
+> opt.lg_prof_interval is merely a dump triggering mechanism.  opt.prof_accum controls whether cumulative stats are collected at all.
+> 
+> Take the following function as an example, run with MALLOC_CONF=prof:true,prof_accum:true :
+> ``` 
+> void g(void *p);
+> 
+> void f(void) {
+>     unsigned i;
+>
+>     for (i = 0; i < (1U << 20); i++) {
+>         void *p = malloc(1U << 30);
+>         if (i == (1U << 19)) {
+>             mallctl("prof.dump", NULL, NULL, NULL, 0); /* A */
+>             mallctl("prof.reset", NULL, NULL, NULL, 0);
+>             mallctl("prof.dump", NULL, NULL, NULL, 0); /* B */
+>         }
+>         if (p != NULL) {
+>             g(p);
+>             free(p);
+>         }
+>     }
+>     mallctl("prof.dump", NULL, NULL, NULL, 0); /* C */
+> }
+> ```
+> What will the heap profiling stats (as interpreted by jeprof) dumped at A, B, and C say regarding the malloc() site in f()?
+> 
+> A:
+>   - Current: ~1 object, ~2^30 bytes
+>   - Cumulative: ~2^19 objects, ~2^49 bytes
+> 
+> B:
+>   - Current: 0 objects, 0 bytes
+>   - Cumulative: 0 objects, 0 bytes
+>
+> C:
+>   - Current: 0 objects, 0 bytes
+>   - Cumulative: ~2^19 objects, ~2^49 bytes
+> 
+> opt.prof_accum controls whether jemalloc maintains the cumulative stats.  With MALLOC_CONF=prof:true,prof_accum:false, you will get no cumulative stats at all, no matter when/whether any resets occurred.
+
+也就是说free会将current数据减少，cumulative数据会一直增加。reset是所有数据的计数起点。
+
+注意这里的cumulative stats，和jeprof的top表头中的flat/cum是两个概念。flat/cum意思是: 纯自己的 vs 包含内部调用的其他函数的。
 
 ### memory profile原理
 A heap profiler associates memory allocations with the callstacks on which they happen.It is prohibitively expensive to handle every allocation done by a program, so the Android Heap Profiler employs a sampling approach that handles a statistically meaningful subset of allocations.
