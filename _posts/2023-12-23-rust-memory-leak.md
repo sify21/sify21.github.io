@@ -142,6 +142,21 @@ Jason Evans本人对数据的解释（http://jemalloc.net/mailman/jemalloc-discu
 
 注意这里的cumulative stats，和jeprof的top表头中的flat/cum是两个概念。flat/cum意思是: 纯自己的 vs 包含内部调用的其他函数的。
 
+### jeprof工具使用（flamegraph）
+> Note that each of the .heap files are full snapshots instead of increments. Hence, simply pick the latest file (or any historical snapshot).
+> 
+> jeprof is a utility provided by jemalloc to analyze heap dump files. It reads both the executable binary and the heap dump to get a full heap profiling.
+> 
+> Note that the heap profiler dump file must be analyzed along with exactly the same binary that it generated from.
+
+jeprof --collapsed binary_file heap_file > heap_file.collapsed
+
+https://github.com/brendangregg/FlameGraph
+
+可以直接丢到这个网页上看https://www.speedscope.app/, 或者
+
+./flamegraph.pl --color=mem --countname=bytes heap_file.collapsed > flamegraph.svg
+
 ### memory profile原理
 A heap profiler associates memory allocations with the callstacks on which they happen.It is prohibitively expensive to handle every allocation done by a program, so the Android Heap Profiler employs a sampling approach that handles a statistically meaningful subset of allocations.
 #### cpu profile sample
