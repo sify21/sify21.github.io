@@ -157,6 +157,11 @@ https://github.com/brendangregg/FlameGraph
 
 ./flamegraph.pl --color=mem --countname=bytes heap_file.collapsed > flamegraph.svg
 
+### tokio-console
+这个工具是基于tokio/tracing做的，需要async runtime支持tracing（目前只有tokio支持）。开启这个还挺麻烦的。需要tokio开启tracing feature; 设置RUSTFLAGS="--cfg tokio_unstable"; 代码中调用console_subscriber::init()。
+
+tracing是需要在代码中手动设置的(#[instrument])，跟我期待的debugger有差距。
+
 ### memory profile原理
 A heap profiler associates memory allocations with the callstacks on which they happen.It is prohibitively expensive to handle every allocation done by a program, so the Android Heap Profiler employs a sampling approach that handles a statistically meaningful subset of allocations.
 #### cpu profile sample
