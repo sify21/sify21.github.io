@@ -149,13 +149,13 @@ Jason Evans本人对数据的解释（http://jemalloc.net/mailman/jemalloc-discu
 > 
 > Note that the heap profiler dump file must be analyzed along with exactly the same binary that it generated from.
 
-jeprof --collapsed binary_file heap_file > heap_file.collapsed
+jeprof --collapsed --show_bytes binary_file heap_file > heap_file.collapsed
 
 https://github.com/brendangregg/FlameGraph
 
 可以直接丢到这个网页上看https://www.speedscope.app/, 或者
 
-./flamegraph.pl --color=mem --countname=bytes heap_file.collapsed > flamegraph.svg
+./flamegraph.pl --colors=mem --countname=bytes heap_file.collapsed > flamegraph.svg
 
 ### tokio-console
 这个工具是基于tokio/tracing做的，需要async runtime支持tracing（目前只有tokio支持）。开启这个还挺麻烦的。需要tokio开启tracing feature; 设置RUSTFLAGS="--cfg tokio_unstable"; 代码中调用console_subscriber::init()。
@@ -255,4 +255,34 @@ libunwind 识别帧中的返回地址是通过解析调用堆栈中的帧信息�
 
 In many cases, memory allocation is regular. If sampling is performed at a fixed granularity, the final result may have a big error. It may happen that a particular type of memory allocation exists at each sampling. This is why randomization is chosen here.
 
-### tokio console
+### gdb
+
+有个rust-gdbgui的可视化工具。时间长会断开连接，不如命令行稳定，而且也不能看string_pointer数组的内容。
+
+### neo4j
+
+调试后没发现代码问题，归结为生出树本身的问题。把数组数据导入到了neo4j中直观看到了节点间的关系
+```
+from neo4j import GraphDatabase
+import json
+
+driver = GraphDatabase.driver(
+    "bolt://localhost:7687", auth=("neo4j", "neo4j"))
+
+d = json.load(open('bom.json'))
+
+# 社区版只支持一个standard database
+
+for i in d['dependencies']:
+    params = {"a": i['ref']}
+    clauses = ["merge (a:Component {name:$a})"]
+    for idx, x in enumerate(i['dependsOn']):
+        node = f"b{idx}"
+        params[node] = x
+        clauses.append(
+            f"MERGE ({node}:Component {{name: ${node}}}) merge (a) -[:dependsOn]-> ({node})")
+    driver.execute_query(
+        ' '.join(clauses), parameters_=params, database_="neo4j")
+
+driver.close()
+ ```
