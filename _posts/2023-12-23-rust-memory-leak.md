@@ -286,3 +286,8 @@ for i in d['dependencies']:
 
 driver.close()
  ```
+本地用了 `neo4j`镜像;可以用`neo4j/neo4j-admin`镜像dump database再导入到aura在线观看（社区版需要先关闭neo4j服务）。
+```
+match (n where not ()-->(n)) return n; // 所有顶层节点
+match (a {name:"顶层节点name"}) match (b {name:"任意记诶但"}) match p=(a) (()-->())* (b) return p; // 查询全部可能路径
+```
