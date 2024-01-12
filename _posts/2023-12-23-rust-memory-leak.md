@@ -291,3 +291,9 @@ driver.close()
 match (n where not ()-->(n)) return n; // 所有顶层节点
 match (a {name:"顶层节点name"}) match (b {name:"任意记诶但"}) match p=(a) (()-->())* (b) return p; // 查询全部可能路径
 ```
+> When the quantified path pattern has one relationship pattern, it can be abbreviated to a quantified relationship.
+
+即 `(() <relationship pattern> ()) <quantifier>` 可以重写为 `<relationship pattern> <quantifier>`
+```
+match (a {name:"顶层节点name"}) match (b {name:"任意记诶但"}) match p=(a)-->*(b) return p; // 查询全部可能路径
+```
