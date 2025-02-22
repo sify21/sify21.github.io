@@ -23,16 +23,20 @@ vim ~/.vnc/xstartup
 unset SESSION_MANAGER
 # exec /etc/X11/xinit/xinitrc
 unset DBUS_SESSION_BUS_ADDRESS
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+export XAUTHORITY=$HOME/.Xauthority
+
 autocutsel -fork
 startxfce4 &
 
-[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
-[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
 xsetroot -solid grey
 vncconfig -iconic &
 # x-terminal-emulator -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
 # x-window-manager &
 ```
+其中，`export XAUTHORITY=$HOME/.Xauthority`是为了能够在vnc session下运行snap版firefox。至少需要2g内存才不卡
+
 再次启动 `vncserver :1`
 # 在本地
 ```
